@@ -1,98 +1,55 @@
---Имена групп/исполнителей
-insert into artists(nickname)
-values
-	('Red Hot Chili Peppers'),
-	('The Frames'),
-	('big strides'),
-	('Damien Jurado'),
-	('Queens of the stone age'),
-	('Radiohead'),
-	('Jaden'),
-	('Ferdous');
+--Название и продолжительность самого длительного трека
+select name, duration from tracks
+where duration = (select max(duration) from tracks);
 
---Название жанров
-insert into genres (name)
-values
-	('New Metal'),
-	('Jazz'),
-	('Rock');
+--Название треков, продолжительность которых больше 3.5 минут
+select name, duration from tracks
+where duration > 3.5
 
---Название альбомов
-insert into albums (albums_name, release_date)
-values
-	('By the Way', '2002.07.09'),
-	('Caught in the trees', '2008.09.09'),
-	('Erys', '2019.07.05'),
-	('For My Own Sake', '2020.01.15'),
-	('Small Town', '2005.06.06'),
-	('Dance the Devil', '1999.06.25'),
-	('Lullabies To Paralyze', '2002.03.21'),
-	('Ok Computer', '1997.05.21');
-	
+--Названия сборников, вышедших в период с 2018 по 2020 год включительно
+select name from collections
+where release_date >= '2018.01.01' and release_date <= '2020.01.01'
 
---Название треков
-insert into tracks (tracks_name, duration, albums_id)
-values
-	('NOIZE', 4, 6),
-	('Everything Trying', 3.25, 8),
-	('On My Own', 4, 6),
-	('Gravity', 2.39, 7),
-	('Overdrive', 2.36, 7),
-	('Cant Stop', 4, 1),
-	('I do not fear jazz', 3.35, 5),
-	('In My Head', 4, 4),
-	('Midnight', 5, 1),
-	('Seven Day Mile', 4, 2),
-	('Rent Day Blues', 4, 2),
-	('No Surprises', 4, 3),
-	('Lucky', 4, 3);
+--Исполнители, чьё имя состоит из одного слова
+select nickname from artists
+where not nickname like '% %';
+
+--Название треков, которые содержат слово «мой» или «my»
+select name from tracks
+where name like '%мой%' or name like '%My%'
+
+--Количество исполнителей в каждом жанре
+select genres_name, count(a.nickname) from genres g
+left join artistsgenres a2 on g.id = a2.genres_id 
+left join artists a on a2.artists_id = a.id 
+group by genres_name 
+order by count(a.nickname) desc;
 
 
---Название коллекций
-insert into collections (collections_name, release_date)
-values
-	('Random Collection of RHCP', '2004.06.21'),
-	('Random Collection of Big Strides', '2010.07.17'),
-	('Random Collection of QOTSA', '2004.06.21'),
-	('Random Collection of Radiohead', '2005.07.22'),
-	('Random Collection of Radiohead', '2005.07.22'),
-	('Random Collection of The Frames', '2000.04.12'),
-	('Random Collection of Damien Jurado', '2019.02.01'),
-	('Random Collection of Ferdous', '2022.06.02'),
-	('Random Collection of Jaden', '2023.01.20');
+--Количество треков, вошедших в альбомы 2019-2020 годов
+select count(tracks_name) from tracks t
+left join albums a on t.albums_id = a.id
+where release_date > '2019.01.01' and release_date < '2021.01.01';
 
---Присоединение артистов к жанру
-insert into artistsgenres (artists_id, genres_id)
-values
-	('1', '1'),
-	('6', '1'),
-	('2', '2'),
-	('4', '2'),
-	('5', '3'),
-	('7', '3'),
-	('10', '1');
---Присоединение артистов и альбомов
-insert into artistsalbums(artists_id, albums_id)
-values
-	(1,1),
-	(2,2),
-	(7,5),
-	(8,7),
-	(10,6),
-	(5,8);
+--Средняя продолжительность треков по каждому альбому 
+select a.albums_name, avg(duration) from tracks t 
+left join albums a on t.albums_id = a.id
+group by albums_name 
+order by avg(duration);
 
---Присоединение названия треков и сборников
-insert into trackscollections(tracks_id, collections_id)
-values
-	(1,1),
-	(3,1),
-	(4,4),
-	(5,4),
-	(6,5),
-	(16,7),
-	(12,8),
-	(13,9),
-	(14,10),
-	(15,10),
-	(10,11),
-	(11,11);
+
+--Все исполнители которые не выпустили альбомы в 2020 году
+select nickname from artists a 
+left join artistsalbums a2 on a.id = a2.artists_id
+left join albums a3 on a2.albums_id = a3.id
+where nickname not in (select nickname from artistsalbums where release_date >= '2020.01.01' and release_date < '2021.01.01');
+
+
+--Названия сборников, в которых присутствует конкретный исполнитель
+select collections_name from collections c 
+left join trackscollections t on t.collections_id = c.id 
+left join tracks t2 on t.tracks_id = t2.id 
+left join albums a on t2.albums_id = a.id 
+left join artistsalbums a2 on a.id = a2.albums_id 
+left join artists a3 on a2.artists_id = a3.id 
+where nickname like 'Da%';
