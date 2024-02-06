@@ -1,55 +1,65 @@
---Название и продолжительность самого длительного трека
-select name, duration from tracks
-where duration = (select max(duration) from tracks);
+-- Количество исполнителей в каждом жанре
+select mg.NameMusgen, count(me.execut_id) from Musical_genres mg
+join Musgen_Execut me on me.musgen_id = mg.id 
+group by mg.namemusgen;
 
---Название треков, продолжительность которых больше 3.5 минут
-select name, duration from tracks
-where duration > 3.5
+-- Количество треков, вошедших в альбомы 2019–2020 годов
+select count(t.nametrack)  from Tracks t
+join albums a on t.id = a.id
+where a.yearalbum between 2019 and 2020;
 
---Названия сборников, вышедших в период с 2018 по 2020 год включительно
-select name from collections
-where release_date >= '2018.01.01' and release_date <= '2020.01.01'
+-- Средняя продолжительность треков по каждому альбому
+select a.namealbum, t.NameTrack, avg(t.Durarion) from Tracks t
+join albums a on t.id = a.id
+group by a.namealbum, t.nametrack;
 
---Исполнители, чьё имя состоит из одного слова
-select nickname from artists
-where not nickname like '% %';
+-- Все исполнители, которые не выпустили альбомы в 2020 году
+select e.NameExecut from Executors e
+where e.nameexecut not in (
+	select e.nameexecut from executors e
+	join execut_album ea on e.id = ea.execut_id 
+	join albums a on ea.execut_id  = a.id 
+	where a.yearalbum = 2020
+);
 
---Название треков, которые содержат слово «мой» или «my»
-select name from tracks
-where name like '%мой%' or name like '%My%'
+-- Названия сборников, в которых присутствует конкретный исполнитель
+select c.NameCollect from Collections c
+join track_collect tc  on c.id = tc.collect_id 
+join tracks t on t.id  = tc.track_id 
+join albums a on a.id = t.album_id 
+join execut_album ea on ea.album_id = a.id 
+join executors e on e.id  = ea.execut_id 
+where e.NameExecut = 'Sara Clark';
 
---Количество исполнителей в каждом жанре
-select genres_name, count(a.nickname) from genres g
-left join artistsgenres a2 on g.id = a2.genres_id 
-left join artists a on a2.artists_id = a.id 
-group by genres_name 
-order by count(a.nickname) desc;
+-- Названия альбомов, в которых присутствуют исполнители более чем одного жанра
+select a.NameAlbum from Albums a
+join execut_album ea on a.id = ea.album_id 
+join Executors e on ea.execut_id  = e.id
+join musgen_execut me on e.id = me.execut_id 
+group by a.NameAlbum, e.id 
+having count (me.musgen_id) > 1;
 
+-- Наименования треков, которые не входят в сборники
+select t.nametrack from tracks t 
+left join track_collect tc  on t.id = tc.track_id  
+where tc.track_id is null;
 
---Количество треков, вошедших в альбомы 2019-2020 годов
-select count(tracks_name) from tracks t
-left join albums a on t.albums_id = a.id
-where release_date > '2019.01.01' and release_date < '2021.01.01';
+-- Исполнитель или исполнители, написавшие самый короткий по продолжительности трек, — теоретически таких треков может быть несколько
+select e.nameexecut from executors e 
+left join execut_album ea on e.id = ea.execut_id 
+left join albums a on ea.album_id = a.id 
+left join tracks t on a.id  = t.album_id 
+where t.durarion = (
+	select min(t2.durarion) from tracks t2  
+);
 
---Средняя продолжительность треков по каждому альбому 
-select a.albums_name, avg(duration) from tracks t 
-left join albums a on t.albums_id = a.id
-group by albums_name 
-order by avg(duration);
-
-
---Все исполнители которые не выпустили альбомы в 2020 году
-select nickname from artists a 
-left join artistsalbums a2 on a.id = a2.artists_id
-left join albums a3 on a2.albums_id = a3.id
-where nickname not in (select nickname from artistsalbums where release_date >= '2020.01.01' and release_date < '2021.01.01');
-
-
---Названия сборников, в которых присутствует конкретный исполнитель
-select collections_name from collections c 
-left join trackscollections t on t.collections_id = c.id 
-left join tracks t2 on t.tracks_id = t2.id 
-left join albums a on t2.albums_id = a.id 
-left join artistsalbums a2 on a.id = a2.albums_id 
-left join artists a3 on a2.artists_id = a3.id 
-where nickname like 'Da%';
+-- Названия альбомов, содержащих наименьшее количество треков
+select a.namealbum from albums a 
+join tracks t on a.id  = t.album_id 
+group by a.namealbum
+having count(t.id) = (
+			select count(t.id) from tracks t2
+			join albums a2 on t2.id = a2.id 
+			group by a2.namealbum 
+			order by count(t2.id)
+			limit 1);
