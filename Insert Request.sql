@@ -1,85 +1,98 @@
-insert into Executors (NameExecut) values 
-('Sara Clark'),
-('Celestial Realms'),
-('Astral Perfection'),
-('D'),
-('Zara Larsson'),
-('Drake'),
-('Walk the moon'),
-('Pink');
+--Имена групп/исполнителей
+insert into artists(nickname)
+values
+	('Red Hot Chili Peppers'),
+	('The Frames'),
+	('big strides'),
+	('Damien Jurado'),
+	('Queens of the stone age'),
+	('Radiohead'),
+	('Jaden'),
+	('Ferdous');
 
-insert into Musical_genres (NameMusgen) values 
-('Pop'),
-('Roc'), 
-('Dance music'),
-('jazz'),
-('Acustic');
+--Название жанров
+insert into genres (name)
+values
+	('New Metal'),
+	('Jazz'),
+	('Rock');
 
-insert into Musgen_Execut (musgen_id, execut_id) values 
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 1),
-(7, 2),
-(8, 3);
+--Название альбомов
+insert into albums (albums_name, release_date)
+values
+	('By the Way', '2002.07.09'),
+	('Caught in the trees', '2008.09.09'),
+	('Erys', '2019.07.05'),
+	('For My Own Sake', '2020.01.15'),
+	('Small Town', '2005.06.06'),
+	('Dance the Devil', '1999.06.25'),
+	('Lullabies To Paralyze', '2002.03.21'),
+	('Ok Computer', '1997.05.21');
+	
+
+--Название треков
+insert into tracks (tracks_name, duration, albums_id)
+values
+	('NOIZE', 4, 6),
+	('Everything Trying', 3.25, 8),
+	('On My Own', 4, 6),
+	('Gravity', 2.39, 7),
+	('Overdrive', 2.36, 7),
+	('Cant Stop', 4, 1),
+	('I do not fear jazz', 3.35, 5),
+	('In My Head', 4, 4),
+	('Midnight', 5, 1),
+	('Seven Day Mile', 4, 2),
+	('Rent Day Blues', 4, 2),
+	('No Surprises', 4, 3),
+	('Lucky', 4, 3);
 
 
-insert into Albums (NameAlbum, YearAlbum) values 
-('Finding Calm', 2018), 
-('Opening to Life', 2018),
-('Guided Meditations', 2018),
-('Funhouse', 2019),
-('I;m not Dead', 2019), 
-('Only honest on the weekend', 2020),
-('Bladverk Band', 2020), 
-('Glory Days', 2020);
+--Название коллекций
+insert into collections (collections_name, release_date)
+values
+	('Random Collection of RHCP', '2004.06.21'),
+	('Random Collection of Big Strides', '2010.07.17'),
+	('Random Collection of QOTSA', '2004.06.21'),
+	('Random Collection of Radiohead', '2005.07.22'),
+	('Random Collection of Radiohead', '2005.07.22'),
+	('Random Collection of The Frames', '2000.04.12'),
+	('Random Collection of Damien Jurado', '2019.02.01'),
+	('Random Collection of Ferdous', '2022.06.02'),
+	('Random Collection of Jaden', '2023.01.20');
 
-insert into Execut_Album (album_id, execut_id) values 
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8);
+--Присоединение артистов к жанру
+insert into artistsgenres (artists_id, genres_id)
+values
+	('1', '1'),
+	('6', '1'),
+	('2', '2'),
+	('4', '2'),
+	('5', '3'),
+	('7', '3'),
+	('10', '1');
+--Присоединение артистов и альбомов
+insert into artistsalbums(artists_id, albums_id)
+values
+	(1,1),
+	(2,2),
+	(7,5),
+	(8,7),
+	(10,6),
+	(5,8);
 
-
-insert into Tracks (album_id, NameTrack, Durarion) values 
-(1, 'Wanna Be Your Baby', 90), 
-(2, 'Never Gonna Die', 120), 
-(3, 'Uncover', 180),
-(4, 'Carry You Home', 185), 
-(5, 'She s Not Me', 190),
-(6, 'Rooftoop', 200),
-(7, 'Hello', 205), 
-(8, 'Send My Love', 90),
-(1, 'I miss you', 110),
-(2, 'When we were young', 146), 
-(3, 'Remedy', 150),
-(4, 'Water under the bridge', 195),
-(5, 'River lea', 135), 
-(6, 'Love in the dark', 190), 
-(7, 'Million years ago', 250);
-
-insert into Collections (NameCollect, YearCollect) values 
-('Singing for strangers', 2018), 
-('Angele', 2018),
-('Jimy-EP', 2018),
-('Renaissance', 2019), 
-('Louise Verneuil', 2019),
-('Deja Venise', 2020), 
-('Filme moi', 2020),
-('Retiens mon desir', 2020);
-
-insert into Track_Collect (track_id, collect_id) values 
-(1, 7),
-(2, 8),
-(3, 5),
-(4, 6),
-(5, 3),
-(6, 2),
-(7, 1),
-(8, 4);
+--Присоединение названия треков и сборников
+insert into trackscollections(tracks_id, collections_id)
+values
+	(1,1),
+	(3,1),
+	(4,4),
+	(5,4),
+	(6,5),
+	(16,7),
+	(12,8),
+	(13,9),
+	(14,10),
+	(15,10),
+	(10,11),
+	(11,11);
