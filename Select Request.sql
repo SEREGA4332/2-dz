@@ -1,65 +1,74 @@
--- Количество исполнителей в каждом жанре
-select mg.NameMusgen, count(me.execut_id) from Musical_genres mg
-join Musgen_Execut me on me.musgen_id = mg.id 
-group by mg.namemusgen;
+-- 1Количество исполнителей в каждом жанре
 
--- Количество треков, вошедших в альбомы 2019–2020 годов
-select count(t.nametrack)  from Tracks t
-join albums a on t.id = a.id
-where a.yearalbum between 2019 and 2020;
+SELECT genre.genre_name, COUNT(name) singer_amount
+FROM singer
+JOIN genres_singers  ON genres_singers.singer_id=singer.singer_id
+JOIN genre ON genre.genre_id=genres_singers.genre_id
+GROUP BY genre_name
+ORDER BY singer_amount DESC;
 
--- Средняя продолжительность треков по каждому альбому
-select a.namealbum, t.NameTrack, avg(t.Durarion) from Tracks t
-join albums a on t.id = a.id
-group by a.namealbum, t.nametrack;
+--2Количество треков, вошедших в альбомы 2019–2020 годов.
 
--- Все исполнители, которые не выпустили альбомы в 2020 году
-select e.NameExecut from Executors e
-where e.nameexecut not in (
-	select e.nameexecut from executors e
-	join execut_album ea on e.id = ea.execut_id 
-	join albums a on ea.execut_id  = a.id 
-	where a.yearalbum = 2020
-);
+SELECT COUNT(track_id) FROM track t
+JOIN album a ON t.album_id = a.album_id
+WHERE year_of_release BETWEEN 2019 AND 2020;
 
--- Названия сборников, в которых присутствует конкретный исполнитель
-select c.NameCollect from Collections c
-join track_collect tc  on c.id = tc.collect_id 
-join tracks t on t.id  = tc.track_id 
-join albums a on a.id = t.album_id 
-join execut_album ea on ea.album_id = a.id 
-join executors e on e.id  = ea.execut_id 
-where e.NameExecut = 'Sara Clark';
+--3 Средняя продолжительность треков по каждому альбому.
 
--- Названия альбомов, в которых присутствуют исполнители более чем одного жанра
-select a.NameAlbum from Albums a
-join execut_album ea on a.id = ea.album_id 
-join Executors e on ea.execut_id  = e.id
-join musgen_execut me on e.id = me.execut_id 
-group by a.NameAlbum, e.id 
-having count (me.musgen_id) > 1;
+SELECT album_name, AVG(duration) FROM album, track
+WHERE track.album_id=album.album_id
+GROUP BY album_name;
 
--- Наименования треков, которые не входят в сборники
-select t.nametrack from tracks t 
-left join track_collect tc  on t.id = tc.track_id  
-where tc.track_id is null;
+--4 Все исполнители, которые не выпустили альбомы в 2020 году
 
--- Исполнитель или исполнители, написавшие самый короткий по продолжительности трек, — теоретически таких треков может быть несколько
-select e.nameexecut from executors e 
-left join execut_album ea on e.id = ea.execut_id 
-left join albums a on ea.album_id = a.id 
-left join tracks t on a.id  = t.album_id 
-where t.durarion = (
-	select min(t2.durarion) from tracks t2  
-);
+SELECT s.name FROM Singer s
+WHERE singer_id NOT IN(SELECT singer_id 
+FROM albums_singers als
+JOIN album a  ON a.album_id = als.album_id
+WHERE year_of_release=2020);
 
--- Названия альбомов, содержащих наименьшее количество треков
-select a.namealbum from albums a 
-join tracks t on a.id  = t.album_id 
-group by a.namealbum
-having count(t.id) = (
-			select count(t.id) from tracks t2
-			join albums a2 on t2.id = a2.id 
-			group by a2.namealbum 
-			order by count(t2.id)
-			limit 1);
+--5 Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами)
+
+SELECT c.collection_name FROM collection c
+JOIN track_collection tc ON tc.collection_id=c.collection_id
+JOIN track t ON t.track_id=tc.track_id 
+JOIN album a ON a.album_id=t.album_id
+JOIN albums_singers als ON als.album_id=a.album_id
+JOIN singer s ON s.singer_id=als.singer_id
+WHERE s.name = 'Balalayka';
+
+--6 Названия альбомов, в которых присутствуют исполнители более чем одного жанра
+
+SELECT DISTINCT a.album_name 
+FROM album a
+JOIN albums_singers als ON als.album_id=a.album_id
+JOIN genres_singers gs ON gs.singer_id=als.singer_id
+GROUP BY a.album_id, gs.singer_id 
+HAVING COUNT(gs.genre_id)>1;
+
+--7 Наименования треков, которые не входят в сборники
+
+SELECT t.track_name FROM track t
+LEFT JOIN track_collection tc ON tc.track_id=t.track_id
+WHERE tc.track_id IS NULL;
+
+--8 Исполнитель или исполнители, написавшие самый короткий по продолжительности трек, — теоретически таких треков может быть несколько
+SELECT s.name FROM singer s
+JOIN albums_singers als ON als.singer_id=s.singer_id
+JOIN album a ON a.album_id=als.album_id
+JOIN track t ON t.album_id = a.album_id
+WHERE duration = (SELECT MIN(duration) FROM track);
+
+--9 Названия альбомов, содержащих наименьшее количество треков.
+
+SELECT album_name 
+FROM album a 
+JOIN track t ON t.album_id = a.album_id
+GROUP BY a.album_id
+HAVING COUNT(track_name) = (
+	SELECT COUNT(track_id) 
+	FROM track
+	GROUP BY album_id
+	ORDER BY 1
+	LIMIT 1
+	);
