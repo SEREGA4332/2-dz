@@ -1,4 +1,12 @@
-insert into Executors (NameExecut) values 
+insert into Genre(genre_name) values 
+('Pop'),
+('Roc'), 
+('Dance music'),
+('jazz'),
+('Acustic');
+
+
+insert into Singer(name) values 
 ('Sara Clark'),
 ('Celestial Realms'),
 ('Astral Perfection'),
@@ -8,25 +16,18 @@ insert into Executors (NameExecut) values
 ('Walk the moon'),
 ('Pink');
 
-insert into Musical_genres (NameMusgen) values 
-('Pop'),
-('Roc'), 
-('Dance music'),
-('jazz'),
-('Acustic');
-
-insert into Musgen_Execut (musgen_id, execut_id) values 
+insert into genres_singers(singer_id, genre_id) values 
 (1, 1),
 (2, 2),
 (3, 3),
 (4, 4),
 (5, 5),
-(1, 6),
-(2, 7),
-(3, 8);
+(6, 1),
+(7, 2),
+(8, 3);
 
 
-insert into Albums (NameAlbum, YearAlbum) values 
+insert into Album(album_name, year_of_release) values 
 ('Finding Calm', 2018), 
 ('Opening to Life', 2018),
 ('Guided Meditations', 2018),
@@ -36,7 +37,7 @@ insert into Albums (NameAlbum, YearAlbum) values
 ('Bladverk Band', 2020), 
 ('Glory Days', 2020);
 
-insert into Execut_Album (album_id, execut_id) values 
+insert into albums_singers(singer_id, album_id) values 
 (1, 1),
 (2, 2),
 (3, 3),
@@ -47,7 +48,7 @@ insert into Execut_Album (album_id, execut_id) values
 (8, 8);
 
 
-insert into Tracks (album_id, NameTrack, Durarion) values 
+insert into track(track_name, duration, album_id) values 
 (1, 'Wanna Be Your Baby', 90), 
 (2, 'Never Gonna Die', 120), 
 (3, 'Uncover', 180),
@@ -64,7 +65,7 @@ insert into Tracks (album_id, NameTrack, Durarion) values
 (6, 'Love in the dark', 190), 
 (7, 'Million years ago', 250);
 
-insert into Collections (NameCollect, YearCollect) values 
+insert into collection (collection_name, year_of_release) values 
 ('Singing for strangers', 2018), 
 ('Angele', 2018),
 ('Jimy-EP', 2018),
@@ -74,7 +75,7 @@ insert into Collections (NameCollect, YearCollect) values
 ('Filme moi', 2020),
 ('Retiens mon desir', 2020);
 
-insert into Track_Collect (track_id, collect_id) values 
+insert into track_collection (track_id, collection_id) values 
 (1, 7),
 (2, 8),
 (3, 5),
