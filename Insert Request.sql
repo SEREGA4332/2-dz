@@ -48,7 +48,7 @@ insert into albums_singers(singer_id, album_id) values
 (8, 8);
 
 
-insert into track(album_id, duration, track_name) values 
+insert into track(album_id, track_name, duration) values 
 (1, 'Wanna Be Your Baby', 90), 
 (2, 'Never Gonna Die', 120), 
 (3, 'Uncover', 180),
