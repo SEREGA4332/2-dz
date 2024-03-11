@@ -1,86 +1,60 @@
-insert into Genre(genre_name) values 
-('Pop'),
-('Roc'), 
-('Dance music'),
-('jazz'),
-('Acustic');
+insert into genre (name)
+values ('Rock'), ('Hip-Hop'), ('Indie');
 
+insert into performer (name)
+values ('Pink Floyd'), ('Linkin Park'), ('Eminem'), ('Кровосток'), ('Radiohead'), ('Alt-J');
 
-insert into Singer(name) values 
-('Sara Clark'),
-('Celestial Realms'),
-('Astral Perfection'),
-('D'),
-('Zara Larsson'),
-('Drake'),
-('Walk the moon'),
-('Pink');
+insert into genre_performer 
+values ('1','1'), ('1','2'), ('2','3'), ('2','4'), ('3','5'), ('3','6');
 
-insert into genres_singers(singer_id, genre_id) values 
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 1),
-(7, 2),
-(8, 3);
+insert into album (name, release_date)
+values 
+    ('The Dark Side of the Moon','1973-03-01'),
+    ('Meteora','2003-03-25'),
+    ('Infinite','1996-11-12'),
+    ('Студень','2012-03-24'),
+    ('OK Computer','1997-05-21'),
+    ('This Is All Yours','2014-09-22');
+    
+insert into performer_album 
+values ('1','1'), ('2','2'), ('3','3'), ('4','4'), ('5','5'), ('6','6');
 
+insert into track (name, duration, album)
+values
+    ('On the Run', '00:02:25.0000000', '1'),
+    ('Time', '00:07:05.0000000', '1'),
+    ('Foreword', '00:00:13.0000000', '2'),
+    ('Faint', '00:02:42.0000000', '2'),
+    ('Infinite', '00:04:41.0000000', '3'),
+    ('313', '00:04:11.0000000', '3'),
+    ('Память', '00:02:59.0000000', '4'),
+    ('Пора домой', '00:01:46.0000000', '4'),
+    ('Let Down', '00:04:59.0000000', '5'),
+    ('Airbag', '00:04:44.0000000', '5'),
+    ('Intro', '00:04:38.0000000', '6'),
+    ('Nara', '00:04:56.0000000', '6');
 
-insert into Album(album_name, year_of_release) values 
-('Finding Calm', 2018), 
-('Opening to Life', 2018),
-('Guided Meditations', 2018),
-('Funhouse', 2019),
-('I;m not Dead', 2019), 
-('Only honest on the weekend', 2020),
-('Bladverk Band', 2020), 
-('Glory Days', 2020);
+insert into collection (name, release_date)
+values
+    ('British Rock', '2000-03-01'),
+    ('Russian Music', '2020-06-11'),
+    ('Hip-Hop Music', '2011-05-06'),
+    ('Little-known Performers', '2019-09-20');
 
-insert into albums_singers(singer_id, album_id) values 
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8);
-
-
-insert into track(album_id, track_name, duration) values 
-(1, 'Wanna Be Your Baby', 90), 
-(2, 'Never Gonna Die', 120), 
-(3, 'Uncover', 180),
-(4, 'Carry You Home', 185), 
-(5, 'She s Not Me', 190),
-(6, 'Rooftoop', 200),
-(7, 'Hello', 205), 
-(8, 'Send My Love', 90),
-(1, 'I miss you', 110),
-(2, 'When we were young', 146), 
-(3, 'Remedy', 150),
-(4, 'Water under the bridge', 195),
-(5, 'River lea', 135), 
-(6, 'Love in the dark', 190), 
-(7, 'Million years ago', 250);
-
-insert into collection (collection_name, year_of_release) values 
-('Singing for strangers', 2018), 
-('Angele', 2018),
-('Jimy-EP', 2018),
-('Renaissance', 2019), 
-('Louise Verneuil', 2019),
-('Deja Venise', 2020), 
-('Filme moi', 2020),
-('Retiens mon desir', 2020);
-
-insert into track_collection (track_id, collection_id) values 
-(1, 7),
-(2, 8),
-(3, 5),
-(4, 6),
-(5, 3),
-(6, 2),
-(7, 1),
-(8, 4);
+insert into track_collection 
+values
+    ('1','1'),
+    ('2','1'),
+    ('9','1'),
+    ('10','1'),
+    ('7','2'),
+    ('8','2'),
+    ('5','3'),
+    ('6','3'),
+    ('7','3'),
+    ('8','3'),
+    ('7','4'),
+    ('8','4'),
+    ('11','4'),
+    ('12','4');
+    
