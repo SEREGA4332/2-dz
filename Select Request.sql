@@ -1,74 +1,50 @@
--- 1Количество исполнителей в каждом жанре
+--Название и продолжительность самого длительного трека.
+select name, duration from track
+where duration = (select max(duration) from track);
 
-SELECT genre.genre_name, COUNT(name) singer_amount
-FROM singer
-JOIN genres_singers  ON genres_singers.singer_id=singer.singer_id
-JOIN genre ON genre.genre_id=genres_singers.genre_id
-GROUP BY genre_name
-ORDER BY singer_amount DESC;
+--Название треков, продолжительность которых не менее 3,5 минут.
+select name from track
+where duration >= '00:03:30.0000000';
 
---2Количество треков, вошедших в альбомы 2019–2020 годов.
+--Названия сборников, вышедших в период с 2018 по 2020 год включительно.
+select name from collection
+where release_date >= '2018-01-01' and release_date <= '2020-12-31';
 
-SELECT COUNT(track_id) FROM track t
-JOIN album a ON t.album_id = a.album_id
-WHERE year_of_release BETWEEN 2019 AND 2020;
+--Исполнители, чьё имя состоит из одного слова.
+select name from performer
+where name not like '% %';
 
---3 Средняя продолжительность треков по каждому альбому.
+--Название треков, которые содержат слово «мой» или «my».
+select name from track
+where name like '% мой %' or name like '% my %';
 
-SELECT album_name, AVG(duration) FROM album, track
-WHERE track.album_id=album.album_id
-GROUP BY album_name;
+--Количество исполнителей в каждом жанре.
+SELECT name, COUNT(genre_performer.genre_id) AS quantity FROM genre 
+LEFT JOIN genre_performer ON genre_performer.genre_id = genre.genre_id
+GROUP BY name;
+  
+--Количество треков, вошедших в альбомы 2019–2020 годов (для получения значимого ответа изменим дату релизов на 1996 - 1997гг)
+select count(track.track_id) as quantity from track
+left join album on track.album = album.album_id
+where album.release_date >= '1996-01-01' and album.release_date <= '1997-12-31';
 
---4 Все исполнители, которые не выпустили альбомы в 2020 году
+--Средняя продолжительность треков по каждому альбому.
+select album.name, avg(track.duration) from album
+left join track on album.album_id = track.album
+group by album.name;
 
-SELECT s.name FROM Singer s
-WHERE singer_id NOT IN(SELECT singer_id 
-FROM albums_singers als
-JOIN album a  ON a.album_id = als.album_id
-WHERE year_of_release=2020);
+--Все исполнители, которые не выпустили альбомы в 2020 году.
+select performer.name from performer
+join performer_album pa on pa.performer_id = performer.performer_id 
+join album on pa.album_id = album.album_id 
+where extract(year from album.release_date) != 2020;
 
---5 Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами)
-
-SELECT c.collection_name FROM collection c
-JOIN track_collection tc ON tc.collection_id=c.collection_id
-JOIN track t ON t.track_id=tc.track_id 
-JOIN album a ON a.album_id=t.album_id
-JOIN albums_singers als ON als.album_id=a.album_id
-JOIN singer s ON s.singer_id=als.singer_id
-WHERE s.name = 'Balalayka';
-
---6 Названия альбомов, в которых присутствуют исполнители более чем одного жанра
-
-SELECT DISTINCT a.album_name 
-FROM album a
-JOIN albums_singers als ON als.album_id=a.album_id
-JOIN genres_singers gs ON gs.singer_id=als.singer_id
-GROUP BY a.album_id, gs.singer_id 
-HAVING COUNT(gs.genre_id)>1;
-
---7 Наименования треков, которые не входят в сборники
-
-SELECT t.track_name FROM track t
-LEFT JOIN track_collection tc ON tc.track_id=t.track_id
-WHERE tc.track_id IS NULL;
-
---8 Исполнитель или исполнители, написавшие самый короткий по продолжительности трек, — теоретически таких треков может быть несколько
-SELECT s.name FROM singer s
-JOIN albums_singers als ON als.singer_id=s.singer_id
-JOIN album a ON a.album_id=als.album_id
-JOIN track t ON t.album_id = a.album_id
-WHERE duration = (SELECT MIN(duration) FROM track);
-
---9 Названия альбомов, содержащих наименьшее количество треков.
-
-SELECT album_name 
-FROM album a 
-JOIN track t ON t.album_id = a.album_id
-GROUP BY a.album_id
-HAVING COUNT(track_name) = (
-	SELECT COUNT(track_id) 
-	FROM track
-	GROUP BY album_id
-	ORDER BY 1
-	LIMIT 1
-	);
+--Названия сборников, в которых присутствует конкретный исполнитель (Кровосток).
+select collection.name from collection
+join track_collection tc on tc.collection_id = collection.collection_id 
+join track on tc.track_id = track.track_id 
+join album a on a.album_id = track.album 
+join performer_album pa on pa.album_id = a.album_id 
+join performer p on p.performer_id = pa.performer_id 
+where p."name" = 'Кровосток'
+group by collection.name;
