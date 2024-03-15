@@ -1,50 +1,56 @@
---Название и продолжительность самого длительного трека.
-select name, duration from track
-where duration = (select max(duration) from track);
+--Название и продолжительность самого длительного трека
+select name, duration from tracks
+where duration = (select max(duration) from tracks);
 
---Название треков, продолжительность которых не менее 3,5 минут.
-select name from track
-where duration >= '00:03:30.0000000';
-
---Названия сборников, вышедших в период с 2018 по 2020 год включительно.
-select name from collection
-where release_date >= '2018-01-01' and release_date <= '2020-12-31';
-
---Исполнители, чьё имя состоит из одного слова.
-select name from performer
-where name not like '% %';
-
---Название треков, которые содержат слово «мой» или «my».
-select name from track
-where name like '% мой %' or name like '% my %';
-
---Количество исполнителей в каждом жанре.
-SELECT name, COUNT(genre_performer.genre_id) AS quantity FROM genre 
-LEFT JOIN genre_performer ON genre_performer.genre_id = genre.genre_id
-GROUP BY name;
+--Название треков, продолжительность которых больше 3.5 минут
+select name, duration from tracks
+where duration > 3.5
   
---Количество треков, вошедших в альбомы 2019–2020 годов (для получения значимого ответа изменим дату релизов на 1996 - 1997гг)
-select count(track.track_id) as quantity from track
-left join album on track.album = album.album_id
-where album.release_date >= '1996-01-01' and album.release_date <= '1997-12-31';
+--Названия сборников, вышедших в период с 2018 по 2020 год включительно
+select name from collections
+where release_date >= '2018.01.01' and release_date <= '2020.01.01'
+  
+--Исполнители, чьё имя состоит из одного слова
+select nickname from artists
+where not nickname like '% %';
 
---Средняя продолжительность треков по каждому альбому.
-select album.name, avg(track.duration) from album
-left join track on album.album_id = track.album
-group by album.name;
+--Название треков, которые содержат слово «мой» или «my»
+select name from tracks
+where name like '%мой%' or name like '%My%'
+  
+--Количество исполнителей в каждом жанре
+select genres_name, count(a.nickname) from genres g
+left join artistsgenres a2 on g.id = a2.genres_id 
+left join artists a on a2.artists_id = a.id 
+group by genres_name 
+order by count(a.nickname) desc;
 
---Все исполнители, которые не выпустили альбомы в 2020 году.
-select performer.name from performer
-join performer_album pa on pa.performer_id = performer.performer_id 
-join album on pa.album_id = album.album_id 
-where extract(year from album.release_date) != 2020;
+--Количество треков, вошедших в альбомы 2019-2020 годов
+select count(tracks_name) from tracks t
+left join albums a on t.albums_id = a.id
+where release_date > '2019.01.01' and release_date < '2021.01.01';
 
---Названия сборников, в которых присутствует конкретный исполнитель (Кровосток).
-select collection.name from collection
-join track_collection tc on tc.collection_id = collection.collection_id 
-join track on tc.track_id = track.track_id 
-join album a on a.album_id = track.album 
-join performer_album pa on pa.album_id = a.album_id 
-join performer p on p.performer_id = pa.performer_id 
-where p."name" = 'Кровосток'
-group by collection.name;
+--Средняя продолжительность треков по каждому альбому 
+select a.albums_name, avg(duration) from tracks t 
+left join albums a on t.albums_id = a.id
+group by albums_name 
+order by avg(duration);
+
+--Все исполнители которые не выпустили альбомы в 2020 году
+select nickname from artists a 
+left join artistsalbums a2 on a.id = a2.artists_id
+left join albums a3 on a2.albums_id = a3.id
+where nickname not in (select nickname where release_date >= '2020.01.01' and release_date < '2021.01.01')
+group by nickname
+order by nickname;
+where nickname not in (select nickname from artistsalbums where release_date >= '2020.01.01' and release_date < '2021.01.01');
+
+
+--Названия сборников, в которых присутствует конкретный исполнитель
+select collections_name from collections c 
+left join trackscollections t on t.collections_id = c.id 
+left join tracks t2 on t.tracks_id = t2.id 
+left join albums a on t2.albums_id = a.id 
+left join artistsalbums a2 on a.id = a2.albums_id 
+left join artists a3 on a2.artists_id = a3.id 
+where nickname like 'Da%';
