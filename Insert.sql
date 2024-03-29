@@ -1,98 +1,118 @@
---Имена групп/исполнителей
-insert into artists(nickname)
-values
-	('Red Hot Chili Peppers'),
-	('The Frames'),
-	('big strides'),
-	('Damien Jurado'),
-	('Queens of the stone age'),
-	('Radiohead'),
-	('Jaden'),
-	('Ferdous');
+-- добавление названий жанров
+INSERT INTO MusicalGenre
+values (1, 'Инди');
 
---Название жанров
-insert into genres (name)
-values
-	('New Metal'),
-	('Jazz'),
-	('Rock');
+INSERT INTO MusicalGenre
+values (2, 'Электроника');
 
---Название альбомов
-insert into albums (albums_name, release_date)
-values
-	('By the Way', '2002.07.09'),
-	('Caught in the trees', '2008.09.09'),
-	('Erys', '2019.07.05'),
-	('For My Own Sake', '2020.01.15'),
-	('Small Town', '2005.06.06'),
-	('Dance the Devil', '1999.06.25'),
-	('Lullabies To Paralyze', '2002.03.21'),
-	('Ok Computer', '1997.05.21');
-	
+INSERT INTO MusicalGenre
+values (3, 'Музыка мира');
 
---Название треков
-insert into tracks (tracks_name, duration, albums_id)
-values
-	('NOIZE', 4, 6),
-	('Everything Trying', 3.25, 8),
-	('On My Own', 4, 6),
-	('Gravity', 2.39, 7),
-	('Overdrive', 2.36, 7),
-	('Cant Stop', 4, 1),
-	('I do not fear jazz', 3.35, 5),
-	('In My Head', 4, 4),
-	('Midnight', 5, 1),
-	('Seven Day Mile', 4, 2),
-	('Rent Day Blues', 4, 2),
-	('No Surprises', 4, 3),
-	('Lucky', 4, 3);
+-- добавление исполнителей
+INSERT INTO Musician
+values (1, 'Rhiannon Giddens');
 
+INSERT INTO Musician
+values (2, 'Mumford & Sons');
 
---Название коллекций
-insert into collections (collections_name, release_date)
-values
-	('Random Collection of RHCP', '2004.06.21'),
-	('Random Collection of Big Strides', '2010.07.17'),
-	('Random Collection of QOTSA', '2004.06.21'),
-	('Random Collection of Radiohead', '2005.07.22'),
-	('Random Collection of Radiohead', '2005.07.22'),
-	('Random Collection of The Frames', '2000.04.12'),
-	('Random Collection of Damien Jurado', '2019.02.01'),
-	('Random Collection of Ferdous', '2022.06.02'),
-	('Random Collection of Jaden', '2023.01.20');
+INSERT INTO Musician
+values (3, 'Thunder Monk');
 
---Присоединение артистов к жанру
-insert into artistsgenres (artists_id, genres_id)
-values
-	('1', '1'),
-	('6', '1'),
-	('2', '2'),
-	('4', '2'),
-	('5', '3'),
-	('7', '3'),
-	('10', '1');
---Присоединение артистов и альбомов
-insert into artistsalbums(artists_id, albums_id)
-values
-	(1,1),
-	(2,2),
-	(7,5),
-	(8,7),
-	(10,6),
-	(5,8);
+INSERT INTO Musician
+values (4, 'VodKe');
 
---Присоединение названия треков и сборников
-insert into trackscollections(tracks_id, collections_id)
-values
-	(1,1),
-	(3,1),
-	(4,4),
-	(5,4),
-	(6,5),
-	(16,7),
-	(12,8),
-	(13,9),
-	(14,10),
-	(15,10),
-	(10,11),
-	(11,11);
+INSERT INTO Musician
+values (5, 'Blackstop');
+
+-- связь жанров и исполнителей
+INSERT INTO musiciansgenres
+values (1, 1);
+
+INSERT INTO musiciansgenres
+values (1, 2);
+
+INSERT INTO musiciansgenres
+values (2, 3);
+
+INSERT INTO musiciansgenres
+values (2, 4);
+
+INSERT INTO musiciansgenres
+values (3, 5);
+
+-- добавление альбомов
+INSERT INTO album 
+values (1, 'Freedom Highway', 2017);
+
+INSERT INTO album 
+values (2, 'Battleground', 2023);
+
+INSERT INTO album 
+values (3, 'Tension', 2023);
+
+-- связь альбомов и исполнителей
+INSERT INTO musiciansalbums  
+values (1, 1);
+
+INSERT INTO musiciansalbums  
+values (2, 3);
+
+INSERT INTO musiciansalbums  
+values (3, 4);
+
+-- добавление сборников
+INSERT INTO collection 
+values (1, 'International Geographic', 2021);
+
+INSERT INTO collection 
+values (2, 'Woo', 2022);
+
+INSERT INTO collection 
+values (3, 'Миротворец', 2019);
+
+INSERT INTO collection 
+values (4, 'We Could Fly', 2017);
+
+-- добавление треков
+INSERT INTO track  
+values (1, 1, 'We Could Fly', 292);
+
+INSERT INTO track  
+values (2, 1, 'Better Get It Right the First Time', 203);
+
+INSERT INTO track  
+values (3, 2, 'Soul of the My Sword', 118);
+
+INSERT INTO track  
+values (4, 3, 'Hold My Hand', 193);
+
+INSERT INTO track  
+values (5, 2, 'Yamaneko', 128);
+
+INSERT INTO track  
+values (6, 3, 'Butler', 256);
+
+-- связь треков и сборников
+INSERT INTO trackscollections  
+values (1, 4);
+
+INSERT INTO trackscollections  
+values (2, 2);
+
+INSERT INTO trackscollections  
+values (3, 3);
+
+INSERT INTO trackscollections  
+values (4, 1);
+
+-- изменения для соответствия заданию
+UPDATE album
+SET releasealbum = 2018
+WHERE albumid = 1;
+
+UPDATE album
+SET releasealbum = 2020
+WHERE albumid = 2;
+
+INSERT INTO musiciansalbums  
+values (1, 5);
