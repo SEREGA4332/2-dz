@@ -1,46 +1,46 @@
-CREATE TABLE IF NOT EXISTS MusicalGenre(
-	GenreID SERIAL PRIMARY KEY,
-	NameGenre VARCHAR(40) UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS Genre (
+    Genre_ID SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Musician(
-	MusicianID SERIAL PRIMARY KEY,
-	NameMusician VARCHAR(60) NOT NULL
+CREATE TABLE IF NOT EXISTS Performer (
+    Performer_ID SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Album(
-	AlbumID SERIAL PRIMARY KEY,
-	NameAlbum VARCHAR(60) NOT NULL,
-	ReleaseAlbum INTEGER NOT NULL 
+CREATE TABLE IF NOT EXISTS Genre_Performer (
+    Genre_ID INTEGER REFERENCES Genre(Genre_ID),
+    Performer_ID INTEGER REFERENCES Performer(Performer_ID),
+    CONSTRAINT G_P PRIMARY KEY (Genre_ID, Performer_ID)
 );
 
-CREATE TABLE IF NOT EXISTS Track(
-	TrackID SERIAL PRIMARY KEY,
-	AlbumID INTEGER NOT NULL REFERENCES Album(AlbumID),
-	NameTrack VARCHAR(100) NOT NULL,
-	LengthTrack INTEGER NOT NULL 
+CREATE TABLE IF NOT EXISTS Album (
+    Album_ID SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL,
+    release_date date
 );
 
-CREATE TABLE IF NOT EXISTS Collection(
-	CollectionID SERIAL PRIMARY KEY,
-	NameCollection VARCHAR(100) NOT NULL,
-	ReleaseCollection INTEGER NOT NULL
+CREATE TABLE IF NOT exists Performer_Album (
+    Performer_ID INTEGER REFERENCES Performer(Performer_ID),
+    Album_ID INTEGER REFERENCES Album(Album_ID),
+    CONSTRAINT P_A PRIMARY KEY (Album_ID, Performer_ID)
 );
 
-CREATE TABLE IF NOT EXISTS MusiciansGenres(
-	GenreID INTEGER REFERENCES MusicalGenre(GenreID),
-	MusicianID INTEGER REFERENCES Musician(MusicianID),
-	CONSTRAINT mg PRIMARY KEY (GenreID, MusicianID)
+CREATE TABLE IF NOT EXISTS Track (
+    Track_ID SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL,
+    Duration time,
+    Album INTEGER REFERENCES Album(Album_ID)
 );
 
-CREATE TABLE IF NOT EXISTS MusiciansAlbums(
-	AlbumID INTEGER REFERENCES Album(AlbumID),
-	MusicianID INTEGER REFERENCES Musician(MusicianID),
-	CONSTRAINT ma PRIMARY KEY (AlbumID, MusicianID)
+CREATE TABLE IF NOT EXISTS Collection (
+    Collection_ID SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL,
+    release_date date
 );
 
-CREATE TABLE IF NOT EXISTS TracksCollections(
-	TrackID INTEGER REFERENCES Track(TrackID),
-	CollectionID INTEGER REFERENCES Collection(CollectionID),
-	CONSTRAINT tc PRIMARY KEY (TrackID, CollectionID)
+CREATE TABLE IF NOT exists Track_Collection (
+    Track_ID INTEGER REFERENCES Track(Track_ID),
+    Collection_ID INTEGER REFERENCES Collection(Collection_ID),
+    CONSTRAINT T_C PRIMARY KEY (Track_ID, Collection_ID)
 );
