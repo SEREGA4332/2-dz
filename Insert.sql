@@ -1,118 +1,59 @@
--- добавление названий жанров
-INSERT INTO MusicalGenre
-values (1, 'Инди');
+insert into genre (name)
+values ('Rock'), ('Hip-Hop'), ('Indie');
 
-INSERT INTO MusicalGenre
-values (2, 'Электроника');
+insert into performer (name)
+values ('Pink Floyd'), ('Linkin Park'), ('Eminem'), ('Кровосток'), ('Radiohead'), ('Alt-J');
 
-INSERT INTO MusicalGenre
-values (3, 'Музыка мира');
+insert into genre_performer 
+values ('1','1'), ('1','2'), ('2','3'), ('2','4'), ('3','5'), ('3','6');
 
--- добавление исполнителей
-INSERT INTO Musician
-values (1, 'Rhiannon Giddens');
+insert into album (name, release_date)
+values 
+    ('The Dark Side of the Moon','1973-03-01'),
+    ('Meteora','2003-03-25'),
+    ('Infinite','1996-11-12'),
+    ('Студень','2012-03-24'),
+    ('OK Computer','1997-05-21'),
+    ('This Is All Yours','2014-09-22');
+    
+insert into performer_album 
+values ('1','1'), ('2','2'), ('3','3'), ('4','4'), ('5','5'), ('6','6');
 
-INSERT INTO Musician
-values (2, 'Mumford & Sons');
+insert into track (name, duration, album)
+values
+    ('On the Run', '00:02:25.0000000', '1'),
+    ('Time', '00:07:05.0000000', '1'),
+    ('Foreword', '00:00:13.0000000', '2'),
+    ('Faint', '00:02:42.0000000', '2'),
+    ('Infinite', '00:04:41.0000000', '3'),
+    ('313', '00:04:11.0000000', '3'),
+    ('Память', '00:02:59.0000000', '4'),
+    ('Пора домой', '00:01:46.0000000', '4'),
+    ('Let Down', '00:04:59.0000000', '5'),
+    ('Airbag', '00:04:44.0000000', '5'),
+    ('Intro', '00:04:38.0000000', '6'),
+    ('Nara', '00:04:56.0000000', '6');
 
-INSERT INTO Musician
-values (3, 'Thunder Monk');
+insert into collection (name, release_date)
+values
+    ('British Rock', '2000-03-01'),
+    ('Russian Music', '2020-06-11'),
+    ('Hip-Hop Music', '2011-05-06'),
+    ('Little-known Performers', '2019-09-20');
 
-INSERT INTO Musician
-values (4, 'VodKe');
-
-INSERT INTO Musician
-values (5, 'Blackstop');
-
--- связь жанров и исполнителей
-INSERT INTO musiciansgenres
-values (1, 1);
-
-INSERT INTO musiciansgenres
-values (1, 2);
-
-INSERT INTO musiciansgenres
-values (2, 3);
-
-INSERT INTO musiciansgenres
-values (2, 4);
-
-INSERT INTO musiciansgenres
-values (3, 5);
-
--- добавление альбомов
-INSERT INTO album 
-values (1, 'Freedom Highway', 2017);
-
-INSERT INTO album 
-values (2, 'Battleground', 2023);
-
-INSERT INTO album 
-values (3, 'Tension', 2023);
-
--- связь альбомов и исполнителей
-INSERT INTO musiciansalbums  
-values (1, 1);
-
-INSERT INTO musiciansalbums  
-values (2, 3);
-
-INSERT INTO musiciansalbums  
-values (3, 4);
-
--- добавление сборников
-INSERT INTO collection 
-values (1, 'International Geographic', 2021);
-
-INSERT INTO collection 
-values (2, 'Woo', 2022);
-
-INSERT INTO collection 
-values (3, 'Миротворец', 2019);
-
-INSERT INTO collection 
-values (4, 'We Could Fly', 2017);
-
--- добавление треков
-INSERT INTO track  
-values (1, 1, 'We Could Fly', 292);
-
-INSERT INTO track  
-values (2, 1, 'Better Get It Right the First Time', 203);
-
-INSERT INTO track  
-values (3, 2, 'Soul of the My Sword', 118);
-
-INSERT INTO track  
-values (4, 3, 'Hold My Hand', 193);
-
-INSERT INTO track  
-values (5, 2, 'Yamaneko', 128);
-
-INSERT INTO track  
-values (6, 3, 'Butler', 256);
-
--- связь треков и сборников
-INSERT INTO trackscollections  
-values (1, 4);
-
-INSERT INTO trackscollections  
-values (2, 2);
-
-INSERT INTO trackscollections  
-values (3, 3);
-
-INSERT INTO trackscollections  
-values (4, 1);
-
--- изменения для соответствия заданию
-UPDATE album
-SET releasealbum = 2018
-WHERE albumid = 1;
-
-UPDATE album
-SET releasealbum = 2020
-WHERE albumid = 2;
-
-INSERT INTO musiciansalbums  
-values (1, 5);
+insert into track_collection 
+values
+    ('1','1'),
+    ('2','1'),
+    ('9','1'),
+    ('10','1'),
+    ('7','2'),
+    ('8','2'),
+    ('5','3'),
+    ('6','3'),
+    ('7','3'),
+    ('8','3'),
+    ('7','4'),
+    ('8','4'),
+    ('11','4'),
+    ('12','4');
