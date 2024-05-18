@@ -16,7 +16,7 @@ where name not like '% %';
 
 --Название треков, которые содержат слово «мой» или «my».
 select name from track
-where name like '%мой%' or name like '%my%';
+where name like '%мой%' or name like '% my %';
 
 --Количество исполнителей в каждом жанре.
 SELECT name, COUNT(genre_performer.genre_id) AS quantity FROM genre 
