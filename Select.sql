@@ -16,7 +16,7 @@ where name not like '% %';
 
 --Название треков, которые содержат слово «мой» или «my».
 select name from track
-where name like '% мой %' or name like '% my %';
+where name like '%мой%' or name like '%my%';
 
 --Количество исполнителей в каждом жанре.
 SELECT name, COUNT(genre_performer.genre_id) AS quantity FROM genre 
@@ -34,10 +34,15 @@ left join track on album.album_id = track.album
 group by album.name;
 
 --Все исполнители, которые не выпустили альбомы в 2020 году.
-select performer.name from performer
-join performer_album pa on pa.performer_id = performer.performer_id 
-join album on pa.album_id = album.album_id 
-where extract(year from album.release_date) != 2020;
+SELECT performer.name 
+FROM performer
+LEFT JOIN (
+  SELECT DISTINCT pa.performer_id 
+  FROM performer_album pa 
+  JOIN album a ON pa.album_id = a.album_id 
+  WHERE EXTRACT(YEAR FROM a.release_date) = 2020
+) as SQ ON performer.performer_id = SQ.performer_id
+WHERE SQ.performer_id IS NULL;
 
 --Названия сборников, в которых присутствует конкретный исполнитель (Кровосток).
 select collection.name from collection
